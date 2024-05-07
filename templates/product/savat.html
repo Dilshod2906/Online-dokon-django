@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Savat -- Uzum Market</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    {% block link %}
+    {% endblock link %}
+    <title>Savat</title>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            margin-top: 30px;
+        }
+
+        .cart {
+            display: flex;
+            padding: 20px;
+            gap: 15px;
+            background-color: #fff;
+            border-top: 1px solid rgb(77, 77, 77);
+        }
+
+        .left img {
+            border-radius: 10px;
+            width: 100%;
+            max-width: 200px;
+            /* Adjust as needed */
+        }
+
+        .middle {
+            flex: 1;
+        }
+
+        .middle h4 {
+            margin-bottom: 10px;
+        }
+
+        .middle a {
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        .right {
+            text-align: right;
+        }
+
+        .price {
+            font-weight: bold;
+        }
+
+        .discounted-price {
+            text-decoration: line-through;
+            color: #868e96;
+        }
+
+        .cart-title {
+            margin-top: 3rem;
+            margin-bottom: 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .remove-item {
+            color: #dc3545;
+            text-decoration: none;
+        }
+
+        .card {
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
+
+        .card-body,
+        .card-footer {
+            background-color: #fff;
+            /* Background color for card body and footer */
+        }
+
+        .card-body {
+            padding: 15px;
+        }
+
+        .card-footer {
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            padding: 10px;
+        }
+
+        .total-price {
+            font-weight: bold;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        .badge-pill {
+            background-color: #007bff;
+            color: #fff;
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 10px;
+        }
+
+        .right-cart {
+            width: 100%;
+        }
+    </style>
+    {% block content %}
+
+</head>
+
+<body>
+    {% if ls %}
+    <div class="container">
+        <div class="row">
+            <h5 style="margin-bottom: 10px;"><span>{{ conut }} ta mahsulot savatga qoshildi</span></h5>
+            <div class="col-lg-8 col-12 products" style="padding: 20px; background-color: white;">
+                <input type="checkbox" id="scales" name="scales" checked />
+                <label for="scales">Hammasini yechish</label>
+              {% if ls %}
+                {% for i in ls %}
+                <div class="cart" style="margin-top: 10px;">
+                    <hr>
+                    <div class="left d-flex gap-4">
+                        <img src="{{ i.product.image.url }}" alt="Product Image" style="width: 20%;">
+                        <div class="middle align-content-between">
+                            <h4 style="font-size: 100%;">{{ i.product.name }}</h4>
+                            <p style="font-size: 90%; color: gray;">Sotuvchi: <a href="#" style="color: black;">{{ i.user.username }}</a></p>
+                                    <a href="{% url 'deletel' i.id %}"><button class="btn btn-success btn-lg float-right" style="width: 100px; border-radius: 13px; background-color: #ff0000; border: none; font-weight: 600; padding: 10px; font-size: 10px;"><i class="fa-solid fa-trash"></i> Yo'q qilish</button></a>
+                                    <p class="price">{{ i.product.price }} so'm</p>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                    <h1>Mahsulotlar yoq</h1>
+
+                {% endfor %}
+              {% else %}
+                <h1 style="text-align: center;">Bosh</h1>
+              {% endif %}
+
+            </div>
+            <div class="col-lg-4 col-12 mt-4 mt-lg-0">
+                <div class="card mb-3 right-cart" style="width: 100%;">
+                    <div class="card-body">
+                        <h5 class="card-title">Buyurtmangiz</h5>
+                        <p class="card-text justify-content-between"><span>Mahsulotlar {{ conut }} ta:
+                    </div>
+                    <ul class="list-group list-group-flush" style="background-color: white;">
+                        <li class="list-group-item bg-light" style="background-color: white;">
+                            <input name="basketID" type="text" disabled class="text-center"
+                                value="Yetkazib berish (1-2) kunda" min="0"
+                                style="width: 100%; background-color: white; border: 1px solid #7700ff; border-radius: 4px; color: #7700ff;">
+                        </li>
+                    </ul>
+                    <div class="card-footer">
+                        <p class="float-left">Jami narx:</p>
+                        <h4 class="float-right total-price">{{ all_price }},00 so'm</h4>
+                    </div>
+                </div>
+                <a class="btn btn-success btn-lg float-right" href="{% url 'order_create' %}">
+                    Buyurtmani rasmiylashtirish
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+{% endblock content %}

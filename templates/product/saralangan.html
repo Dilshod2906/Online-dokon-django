@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+    <h3 style="display: flex; justify-content: center;padding-top: 20px;padding-bottom: 20px;">Saralangan</h3>
+    <div class="row p-4" >
+    {% for last_productss in javob2 %}
+        <div class="col-lg-4 col-md-6 mb-4 product">
+            <div class="card h-100">
+                <a href="#">
+                    <img class="card-img-top"
+                        src="{{ last_productss.product.image.url }}"
+                        alt="">
+                </a>
+                <div class="card-body">
+                    <a href="{% url 'deletel2' last_productss.id %}"><i class="fa-solid fa-heart" style="color: red;"></i></a>
+
+                    <h4 class="card-title">
+                        <a href="{% url "Product_detail" last_productss.id %}" style="font-size: 20px;">{{ last_productss.product.name }}</a>
+                    </h4>
+                    <h5><span style="color: gray; text-decoration: line-through; font-size: 15px; margin-bottom: -3px;">{{ last_productss.product.old_prices }} so'm</span><br>{{ last_productss.product.price }} so'm</h5>
+
+                </div>
+                <div class="card-footer text-center">
+                <a href="{% url 'savatga_qushish' last_productss.product.id %}"> <button type="button" class="btn btn-outline-success">Savatga qo'shish</button></a>
+                </div>
+            </div>
+        </div>
+
+    {% endfor %}
+    </div>
+
+{% endblock content %}

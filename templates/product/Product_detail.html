@@ -1,0 +1,391 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block link %}
+    <title>{{ product.name }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+        }
+    
+        .detail {
+            width: 85%;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+        
+        img {
+            width: 400px;
+            height: auto;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #333;
+        }
+
+        p {
+            color: #666;
+        }
+
+        .details {
+            margin-bottom: 20px;
+        }
+
+        .details label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .details span {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .price {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        .quantity {
+            padding: 0;
+            border: 0;
+        }
+
+        .sale {
+            background-color: #7000FF;
+            color: white;
+            font-weight: 400;
+            padding: 5px;
+            border-radius: 5px;
+            width: 60px;
+            height: 25px;
+            text-align: center;
+            font-size: 12px;
+            margin-top: -23px;
+            margin-left: 200px;
+        }
+        .yy{
+            color:yellow;
+        }
+    </style>
+{% endblock link %}
+
+
+{% block content %}
+    <div class="detail" style="margin-top: 10px;">
+        <p style="font-size: 14px;"><b style="color: black;"><a href="{% url "index" %}" style="color: black; text-decoration: none;">Bosh sahifa</a></b> / <a href="#" style="color: black; text-decoration: none;">Barcha turkumlar</a> / <a href="#" style="color: black; text-decoration: none;">{{ product.category }}</a></p>
+        <div class="row">
+            <div class="col-lg-6 col-12 d-flex">
+                <div style="margin-left: 30xpx;">
+                    <img src="{{ product.image.url }}" alt="Product Image" style="width: 71%; border-radius: 3px; margin-right: 0px; cursor: pointer; margin-left: 30xpx;" onclick="currentSlide(1)">
+                    <img src="{{ product.image.url }}" alt="Product Image" style="width: 71%; border-radius: 3px; margin-right: 0px; cursor: pointer; margin-left: 30xpx;" onclick="currentSlide(2)">
+                    <img src="{{ product.image.url }}" alt="Product Image" style="width: 71%; border-radius: 3px; margin-right: 0px; cursor: pointer; margin-left: 30xpx;" onclick="currentSlide(3)">
+                    <img src="{{ product.image.url }}" alt="Product Image" style="width: 71%; border-radius: 3px; margin-right: 0px; cursor: pointer; margin-left: 30xpx;" onclick="currentSlide(4)">   
+                </div>
+                <div>
+                    <img src="{{ product.image.url }}" style="width: 405px; margin-left: 10px;">
+                </div>
+            </div>
+
+            <div class="col-lg-6 col-12">
+                <h1 style="font-weight: 500; font-size: 20px;">{{ product.name }}</h1>
+
+                <!-- {% comment %} <div class="details">
+                    <label>Vendor:</label>
+                    <span>Vendor Name</span>
+                </div> {% endcomment %} -->
+                
+
+                <div class="details" style="margin-top: 20px;">
+                    <label style="font-weight: normal; font-size: 15px;">Soni: <p id="maxQuantity" style="margin-top: -23px; margin-left: 50px;">{{ product.quantity }} ta</p></label>
+                    <label style="font-weight: normal; margin-top: -10px; font-size: 15px;">Sotuvchi: <a href="#" id="vendor" style="margin-top: -23px; margin-left: 10px; text-decoration: underline; cursor: pointer; color: black;">{{ product.userr }}</a></label>
+                </div>
+                
+                <hr>
+
+                <div class="quantity">
+                    <input type="number" id="quantity" value="1" min="1" readonly style="margin-bottom: 10px; border: 1px solid rgb(63, 63, 63); text-align: center; width: 120px; z-index: -1; height: 40px; border-radius: 3px;" max="{{ product.quantity }}">
+                    <button onclick="increaseQuantity()" style="margin-left: -40px; border: none; background-color: white; height: 30px; border-left: 1px solid rgb(128, 128, 128); font-size: 20px; font-weight: 500;">+</button>
+                    <button onclick="decreaseQuantity()" style="margin-left: -107px; border: none; background-color: white; z-index: 1; border-right: 1px solid rgb(128, 128, 128); height: 30px; font-size: 20px; padding-left: 10px; font-weight: 500;">-</button> 
+                </div>
+
+                {% if product.quantity < 6 %}
+                    <p style="margin-top: -43px; margin-left: 140px; color: #7000FF;"><i class="fa-solid fa-fire"></i> Bor-yoʻgi {{ product.quantity }} dona qoldi</p>
+                {% else %}
+                    <p style="margin-top: -43px; margin-left: 140px; color: green;">Sotuvda {{ product.quantity }} ta bor</p>
+                {% endif %}
+                
+                <br>
+                <div class="price">
+                    <p style="font-size: 15px;">Narx: </p>
+                    <p id="price" style="margin-top: -20px; font-weight: 400; color: black;">{{ product.price }}</p>
+                </div>
+
+                <div class="old_price" style="margin-top: -47px; margin-bottom: 50px; margin-left: 180px; font-size: 15px;">
+                    <span style="text-decoration: line-through; color: rgb(87, 87, 87); margin-top: -30px; background-color: yellow; padding: 5px; border-radius: 6px;">{{ product.old_prices }} so'm</span>
+                    <p class="sale" style="margin-left: 130px;">Aksiya</p>
+                </div>
+                <div class="price">
+                    <p style="font-size: 15px;">Rangi: </p>
+                    <p id="price" style="margin-top: -20px; font-weight: 400; color: black;">{{ product.rang1 }}</p>
+                </div>
+
+                <div class="price">
+                    <p style="font-size: 15px;">Hajmi: </p>
+                    <p id="price" style="margin-top: -20px; font-weight: 400; color: black;">{{ product.size }} GB</p>
+                </div>
+
+
+                <a class="btn text-left" style="margin-top: -10px; background-color: #F2F4F7; border-radius: 8px; padding: 10px; color: black; font-weight: 600; width: 95%; margin-bottom: 20px;"><i class="fa-solid fa-cart-shopping"></i> Savatga o'tish <i class="fa-solid fa-chevron-right"></i></a>
+
+                <div class="d-flex gap-2" style="width: 100%;">
+                    <a href="{% url 'savatga_qushish' product.id %}"></a><button class="button" style="background-color: #7000FF; border-radius: 12px; padding: 15px; width: 90%; font-weight: bold; border: 2px solid #7000FF;">Savatga qo'shish</button>
+                    <a href="{% url 'index' %}" style="width: 100%;"><button class="button" style="width: 90%; background-color: #ffffff; border-radius: 12px; padding: 15px; font-weight: bold; border: 2px solid #7000FF; color: #7000FF;">Asosiyga qaytish</button></a>
+                </div>
+
+                <p class="btn text-left" style="margin-top: 20px; background-color: #FFF8E6; border-radius: 8px; padding: 10px; color: black; font-weight: 600; width: 95%;"><i class="fa-solid fa-list-check"></i> Hammasi {{ product.count_buy }} ta buyurtma</p>
+                <p style="margin-top: 25px;">Mahsulot xaqida qisqacha:</p>
+                {% for about in short %}
+                    <li style="font-size: 15px;">{{ about }}</li>
+                {% endfor %}
+            </div>
+
+        </div>
+        <div class="desc" style="margin-top: 50px;">
+            <hr>
+            <p class="text-center" style="color: #7000FF;">Mahsulot tavsifi <hr></p>
+
+            <p>{{ product.description }}</p>
+        </div>
+        <h1 style="display: flex;justify-content: center;">Comment</h1>
+        <h3>{{ soni }} komment</h3>
+        <div>
+          {% if commen %}
+          
+            <div class="bg-white border border-top-0 p-4">
+                {% for comment in commen %}
+                    <div class="media mb-4">
+                        <div class="media-body">
+                            <h6><a class="text-secondary font-weight-bold" href="">{{ comment.userr }}</a> <small><i>{{ comment.time }}</i></small></h6>
+                            {% if comment.rate == 5 %}
+
+                                <i class="fa-solid fa-star yy"></i>
+                                <i class="fa-solid fa-star yy"></i>
+                                <i class="fa-solid fa-star yy"></i>
+                                <i class="fa-solid fa-star yy"></i>
+                                <i class="fa-solid fa-star yy"></i>
+
+                            {% endif %}
+                            {% if comment.rate == 4 %}
+
+                            <i class="fa-solid fa-star yy"></i>
+                            <i class="fa-solid fa-star yy"></i>
+                            <i class="fa-solid fa-star yy"></i>
+                            <i class="fa-solid fa-star yy"></i>
+                        
+
+                            {% endif %}
+                            {% if comment.rate == 3 %}
+
+                            <i class="fa-solid fa-star yy"></i>
+                            <i class="fa-solid fa-star yy"></i>
+                            <i class="fa-solid fa-star yy"></i>
+
+
+                            {% endif %}                        
+                            {% if comment.rate == 2 %}
+
+                            <i class="fa-solid fa-star yy"></i>
+                            <i class="fa-solid fa-star yy"></i>
+    
+
+                            {% endif %}                        
+                            {% if comment.rate == 1 %}
+
+                            <i class="fa-solid fa-star yy"></i>
+
+
+                            {% endif %}
+                            <br>
+                            <img src="{{ comment.img.url }}" style="width: 100px;">
+                            <p>{{ comment.body | linebreaks }}</p>
+
+                        </div>
+                    </div>
+                    <hr>
+                {% endfor %}
+            </div>
+          {% endif %}
+          
+        </div>
+        <div>
+            <form method="POST" enctype="multipart/form-data" style="width: 50%;">{% csrf_token %}
+                <div class="star" style="width: 100%;margin-top:20px ;">
+                    <i class="fa-solid fa-star" id="1" onclick="bir()"></i>
+                    <i class="fa-solid fa-star" id="2" onclick="ikki()"></i>
+                    <i class="fa-solid fa-star" id="3" onclick="uch()"></i>
+                    <i class="fa-solid fa-star" id="4" onclick="tort()"></i>
+                    <i class="fa-solid fa-star" id="5" onclick="besh()"></i>
+                </div>
+                <input type="file" name="img", required="required" style="width: 100%; margin-top:20px ;">
+                <input type="text" name="body", required="required" style="width: 100%; padding:40px ;margin-top:20px ;">
+                <input type="number" id="id_rate" name="rate", required="required" style="width: 100%; margin-top:20px ;">
+ 
+
+                    
+
+                
+                
+
+                
+                <button type="submit" style="background-color: #7000FF; border-radius: 12px; padding: 10px; width: 30%; font-weight: bold; border: 2px solid #7000FF;margin-top: 20px;">Izoh qoldirish</button>
+            </form>
+        </div>
+
+    </div>
+
+
+    <script>
+        let b = 0
+        let b1 = document.getElementById('1')
+        let b2 = document.getElementById('2')
+        let b3 = document.getElementById('3')
+        let b4 = document.getElementById('4')
+        let b5 = document.getElementById('5')
+        let hidee = document.getElementById('id_rate').style.display = 'none';
+     
+
+        function bir(){
+            b1.style.color = 'yellow'
+            b2.style.color = '#212529'
+            b3.style.color = '#212529'
+            b4.style.color = '#212529'
+            b5.style.color = '#212529'
+            b=0;
+            b+=1;
+            console.log(b)
+            document.getElementById('id_rate').value = b
+
+        }
+        function ikki(){
+
+
+            b1.style.color = 'yellow'
+            b2.style.color = 'yellow'
+            b3.style.color = '#212529'
+            b4.style.color = '#212529'
+            b5.style.color = '#212529'
+
+            
+            b=0;
+            b+=2;
+            console.log(b)
+            document.getElementById('id_rate').value = b
+
+
+        }        
+        function uch(){
+            b1.style.color = 'yellow'
+            b2.style.color = 'yellow'
+            b3.style.color = 'yellow'
+            b4.style.color = '#212529'
+            b5.style.color = '#212529'
+
+            b=0;
+            b+=3;
+            console.log(b)
+            document.getElementById('id_rate').value = b
+
+            
+        }        
+        function tort(){
+            b1.style.color = 'yellow'
+            b2.style.color = 'yellow'
+            b3.style.color = 'yellow'
+            b4.style.color = 'yellow'
+            b5.style.color = '#212529'
+
+            b=0;
+            b+=4;
+            console.log(b)
+            document.getElementById('id_rate').value = b
+
+
+        }        
+        function besh(){
+            b1.style.color = 'yellow'
+            b2.style.color = 'yellow'
+            b3.style.color = 'yellow'
+            b4.style.color = 'yellow'
+            b5.style.color = 'yellow'
+            b=0;
+            b+=5;
+            console.log(b)
+            document.getElementById('id_rate').value = b
+
+
+        }
+        function getPrice() {
+            var priceTag = document.getElementById('price');
+            var priceText = priceTag.textContent;
+            // Extract the numerical value from the price text
+            return parseFloat(priceText);
+        }
+
+        function getMaxQuantity() {
+            var maxQuantityTag = document.getElementById('maxQuantity');
+            var maxQuantityText = maxQuantityTag.textContent;
+            // Extract the numerical value from the max quantity text
+            return parseInt(maxQuantityText.replace(' ta', ''));
+        }
+
+        var price = getPrice()
+
+        function updatePrice() {
+            var quantityInput = document.getElementById('quantity');
+            var totalPrice = price * parseInt(quantityInput.value);
+            document.getElementById('price').textContent = totalPrice.toFixed(2) + ' so\'m';
+        }
+
+        function increaseQuantity() {
+            var quantityInput = document.getElementById('quantity');
+            var maxQuantity = getMaxQuantity();
+            if (parseInt(quantityInput.value) < maxQuantity) {
+                quantityInput.value = parseInt(quantityInput.value) + 1;
+                updatePrice();
+            }
+        }
+
+        function decreaseQuantity() {
+            var quantityInput = document.getElementById('quantity');
+            var currentValue = parseInt(quantityInput.value);
+            if (currentValue > 1) {
+                quantityInput.value = currentValue - 1;
+                updatePrice();
+            }
+        }
+
+        // Initial price update
+        updatePrice();
+    </script>
+{% endblock content %}

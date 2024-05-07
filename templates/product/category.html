@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block link %}
+
+{% endblock link %}
+{% block content %}
+<div class="row p-3" >
+    {% for last_products in categor %}
+        <div class="col-lg-3 col-md-5 mb-3 product">
+            <div class="card h-100">
+                <a href="#">
+                    <img class="card-img-top"
+                        src="{{ last_products.image.url }}"
+                        alt="">
+                </a>
+                <div class="card-body">
+                    <h4 class="card-title">
+                        <a href="{% url "Product_detail" last_products.id %}" style="font-size: 20px;">{{ last_products.name }}</a>
+                    </h4>
+                    <h5><span style="color: gray; text-decoration: line-through; font-size: 15px; margin-bottom: -3px;">{{ last_products.old_prices }} so'm</span><br>{{ last_products.price }} so'm</h5>
+
+                </div>
+                <div class="card-footer text-center">
+                <a href="{% url 'savatga_qushish' last_products.id %}"> <button type="button" class="btn btn-outline-success">Savatga qo'shish</button></a>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <h4>Bunday ma'lumot topilmadi.</h4>
+    {% endfor %}
+    </div>
+{% endblock content %}
